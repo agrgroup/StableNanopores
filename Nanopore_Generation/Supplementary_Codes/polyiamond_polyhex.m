@@ -1,4 +1,6 @@
 function polyiamond_polyhex(n,number)
+%Input n(number of triangles in polyiamond) and the index of that in the saved cell array polys_ind.
+%Plots polyiamonds and polyhexes.
 close all;
 str=string(n);
  load("stable_nanopores"+str+".mat");
@@ -8,6 +10,7 @@ sh=s/2;
 c=2;
     fc=[0 0 1];
     bl=[];
+    %Polyiamond plotting
 figure;
 for i=1:size(A)
     
@@ -35,6 +38,7 @@ end
 axis equal;
      axis off;
     
+    %Polyhex plotting
     % figure %Uncomment the line to make plots in separate figures
      bl=unique(round(bl,4),'rows');
 si= size(bl,1);
