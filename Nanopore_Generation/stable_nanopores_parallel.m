@@ -57,13 +57,13 @@ fixed_polyiamonds_with_inverted_triangle_at_origin=numpolys1
 data=zeros(numpolys1,3);
 
 parfor i=1:numpolys1    
-    numb=i;
+ numb=i;
  A=polys1{i};%A=representative coordinates of the polyiamond
-  [ho,vrv,uid]=holes_db_elimination(A,remove_dangling);%Checks for nanopores with dangling bonds and non-bonded atoms or polyiamond with holes and vertices shared by 5 triangles
-  %ho indicates to preence of holes and vertices shared by 5 triangles. vrv is the vertex repetition vector. uid is the unique id of polyiamonds.     
-  if ho==1 %Saves if no holes and vertices shared by 5 triangles are present          
-         data(i,:)= [vrv uid i];
-       end
+ [ho,vrv,uid]=holes_db_elimination(A,remove_dangling);%Checks for nanopores with dangling bonds and non-bonded atoms or polyiamond with holes and vertices shared by 5 triangles
+%ho indicates to preence of holes and vertices shared by 5 triangles. vrv is the vertex repetition vector. uid is the unique id of polyiamonds.     
+ if ho==1 %Saves if no holes and vertices shared by 5 triangles are present          
+  data(i,:)= [vrv uid i];
+ end
 end
 end
 %finds and deletes rows containg zeroes
@@ -77,21 +77,20 @@ si=[0;-(ia-length(data)-1)];%Extracts where a particular vertex repetition vecto
 ind=[];
 %Eliminating symmetrical isomers by comparison amongst polyiamonds having same vertex repetition vector
 parfor i=2:size(si,1)
-       indi=free_symmetry_op(data(si(i-1)+1:si(i),:));
-      ind=[ind,indi];     
+  indi=free_symmetry_op(data(si(i-1)+1:si(i),:));
+  ind=[ind,indi];     
 end
 if remove_dangling==0%Saves free polyiamonds
     parfor w=1:size(ind,2)
      polys_ind{w}=polys1{ind(w)};
     end
-      free_polyiamonds=numel(ind)
+    free_polyiamonds=numel(ind)
     OEIS_number=free_oeis(n)
     save("free_polyiamonds"+str+".mat",'ind','polys_ind')
     toc
 else
      
-%Finding properties, eliminating nanopores with dangling moeties and saving
-%data and xyz files
+%Finding properties, eliminating nanopores with dangling moeties and saving data and xyz files
 ind_stable=[];
 order=[];
 minors=[];
@@ -99,11 +98,8 @@ majors=[];
 shape_g=[];
 
 parfor w=1:size(ind,2)
-     A=polys1{ind(w)};%A=representative coordinates of the polyiamond
-%The function calculates and returns the values of properties (major axis, minor axis and
-%shapefactor), checks for presence of dangling moeities and prints the
-%coordinates in xyz file if the calculated values fall in the range given
-%as input).
+ A=polys1{ind(w)};%A=representative coordinates of the polyiamond
+%This function calculates and returns the values of properties (major axis, minor axis and shapefactor), checks for presence of dangling moeities and prints the coordinates in xyz file if the calculated values fall in the range given as input).
    [sf,ma,mi,moeityr,inrange]= properties_moeity_xyz(A,rlsf,rusf,rlma,ruma,rlmi,rumi,n,print);
  if moeityr==0 && inrange==1
      %Saving properies
@@ -117,9 +113,8 @@ end
 parfor i=1:numel(ind_stable)
    polys_ind{i}=polys1{ind_stable(i)};%Saving Reperesntative coordinates of stable nanopores 
 end
-       
-
-% Sorting tale based on Shape factor
+    
+ %Sorting tale based on Shape factor
  [shape_sorted,inde]=sort(shape_g);
  %Sorting tale based on Minor axis
  [minors_sorted,indemi]=sort(minors);
